@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Projects\Robot_Framework_Demo\WebDemo\env"
+VIRTUAL_ENV="C:\Projects\MyGit_Robot_Framework_Demo\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -29,7 +29,6 @@ Open Browser To Login Page
 
 Login Page Should Be Open
     Title Should Be    Login Page
-
 Go To Login Page
     Go To    ${LOGIN URL}
     Login Page Should Be Open
