@@ -22,7 +22,7 @@ ${ERROR URL}      http://${SERVER}/error.html
 
 *** Keywords ***
 Open Browser To Login Page
-    Open Browser    ${LOGIN URL}    ${BROWSER}
+    Open Browser    ${LOGIN URL}    ${BROWSER}    remote_url=${GRID_URL}
     Maximize Browser Window
     Set Selenium Speed    ${DELAY}
     Login Page Should Be Open
