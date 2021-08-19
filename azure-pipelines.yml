@@ -28,5 +28,14 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    start start_testing.bat
-  displayName: 'Robot start testing'
+    robocop -A robocop.cfg
+    if %errorlevel% neq 0 exit /b %errorlevel%
+  displayName: 'Check static code analysis of .robot files'
+
+- script: |
+    start cmd.exe /c python demoapp/server.py
+  displayName: 'Start application demo'
+
+- script: |
+    robot login_tests
+  displayName: 'Start testing application demo'
