@@ -17,9 +17,9 @@ stages:
           demands:
             - agent.name -equals DESKTOP-DBNL3H0
         strategy:
-          matrix:
-            Python37:
-              python.version: '3.7'
+            matrix:
+              Python37:
+                python.version: '3.7'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -29,6 +29,9 @@ stages:
             py -m venv env
             call .\env\Scripts\activate.bat
             displayName: 'Create Virtual Environment'
+          - script: |
+            call .\env\Scripts\activate.bat
+            displayName: 'Activate Virtual Environment'
           - script: |
             pip install -r requirements.txt
             displayName: 'Install dependencies'
