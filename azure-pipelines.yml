@@ -42,6 +42,7 @@ steps:
 
   - task: PublishTestResults@2
     displayName: 'Publish Test Results outputxunit.xml'
+    condition: succeededOrFailed()
     inputs:
       testResultsFiles: outputxunit.xml
       searchFolder: '$(Build.SourcesDirectory)'
