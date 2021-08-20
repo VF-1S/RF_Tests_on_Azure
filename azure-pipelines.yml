@@ -41,8 +41,10 @@ steps:
   displayName: 'Start testing application demo'
 
 - task: PublishTestResults@2
+  condition: succeededOrFailed()
+  displayName: 'Publish Test Results outputxunit.xml'
   inputs:
     testResultsFiles: outputxunit.xml
     searchFolder: '$(Build.SourcesDirectory)'
-    condition: succeededOrFailed()
-    displayName: 'Publish Test Results outputxunit.xml'
+    mergeTestResults: false
+    failTaskOnFailedTests: true
