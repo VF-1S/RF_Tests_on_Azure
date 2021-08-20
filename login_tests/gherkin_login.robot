@@ -10,7 +10,7 @@ Test Teardown     Close Browser
 *** Test Cases ***
 Valid Login
     Given Browser Is Opened To Login Page
-    When User "Demo" Logs In With Password "Mode"
+    When User "demo" Logs In With Password "mode"
     Then Welcome Page Should Be Open
 
 

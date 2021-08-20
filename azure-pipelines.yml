@@ -29,7 +29,6 @@ steps:
 
 - script: |
     robocop -A robocop.cfg
-    if %errorlevel% neq 0 exit /b %errorlevel%
   displayName: 'Check static code analysis of .robot files'
 
 - script: |
