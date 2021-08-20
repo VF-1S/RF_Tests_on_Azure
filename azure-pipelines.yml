@@ -11,7 +11,7 @@ stages:
     displayName: 'Set Up Environment'
     jobs:
       - job: setup_env
-        displayName: Build Deployment Package
+        displayName: 'Build Deployment Package'
         pool:
           name: Default
           demands:
@@ -38,19 +38,19 @@ stages:
     displayName: 'Start Testing'
     jobs:
       - job: start_tests
-          displayName: Scan the Code and Start Testing
-          pool:
-            name: Default
-            demands:
-              - agent.name -equals DESKTOP-DBNL3H0
-          steps:
-            - script: |
-                robocop -A robocop.cfg
-              displayName: 'Check static code analysis of .robot files'
+        displayName: 'Scan the Code and Start Testing'
+        pool:
+          name: Default
+          demands:
+            - agent.name -equals DESKTOP-DBNL3H0
+        steps:
+          - script: |
+              robocop -A robocop.cfg
+            displayName: 'Check static code analysis of .robot files'
 
-            - script: |
-                robot -x outputxunit.xml login_tests
-              displayName: 'Start testing application demo'
+          - script: |
+              robot -x outputxunit.xml login_tests
+            displayName: 'Start testing application demo'
   - stage: Publishing
     displayName: 'Publish AT Results'
     jobs:
