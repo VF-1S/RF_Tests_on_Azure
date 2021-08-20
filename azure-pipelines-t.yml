@@ -1,0 +1,49 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+  - main
+
+pool:
+  vmImage: vs2017-win2016
+strategy:
+  matrix:
+    Python37:
+      python.version: '3.7'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: 'Use Python $(python.version)'
+
+  - script: |
+      mkdir $(venv)
+      $(buildPython.pythonLocation)\python -m virtualenv $(venv)
+      call $(venv)\Scripts\activate.bat
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
+
+  - script: |
+      robocop -A robocop.cfg
+    displayName: 'Check static code analysis of .robot files'
+
+  - script: |
+      start cmd.exe /c python demoapp/server.py
+    displayName: 'Start application demo'
+
+  - script: |
+      robot -x outputxunit.xml login_tests
+    displayName: 'Start testing application demo'
+    name: RoboTests
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results outputxunit.xml'
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFiles: outputxunit.xml
+      searchFolder: '$(Build.SourcesDirectory)'
+      mergeTestResults: false
+      failTaskOnFailedTests: true
