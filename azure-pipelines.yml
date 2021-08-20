@@ -36,7 +36,7 @@ steps:
   displayName: 'Start application demo'
 
 - script: |
-    vso[task.setvariable variable=doThing;isOutput=true]Yes
+    Write-Host ("##vso[task.setvariable variable=doThing;isOutput=true]Yes")
     robot -x outputxunit.xml login_tests
   displayName: 'Start testing application demo'
   name: RoboTests
