@@ -18,7 +18,6 @@ Valid Login
     When User Logs In With Valid Credentials
     Then Welcome Page Should Be Open
 
-
 *** Keywords ***
 Browser Is Opened To Login Page
     Open Browser To Login Page
