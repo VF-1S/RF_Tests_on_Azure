@@ -6,21 +6,6 @@
 trigger:
 - main
 
-pool:
-  name: Default
-  demands:
-   - agent.name -equals DESKTOP-DBNL3H0
-strategy:
-  matrix:
-    Python37:
-      python.version: '3.7'
-
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
-
 stagies:
   - stage: Environment
     displayName: 'Set Up Environment'
