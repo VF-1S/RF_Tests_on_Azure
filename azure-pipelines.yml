@@ -37,5 +37,5 @@ steps:
   displayName: 'Start application demo'
 
 - script: |
-    robot login_tests
+    robot -x outputxunit.xml login_tests
   displayName: 'Start testing application demo'
