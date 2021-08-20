@@ -7,10 +7,15 @@ Resource          resource.robot
 Test Teardown     Close Browser
 
 
+*** Variables ***
+${USERNAME}     demo
+${PASSWORD}     mode
+
+
 *** Test Cases ***
 Valid Login
     Given Browser Is Opened To Login Page
-    When User "demo" Logs In With Password "mode"
+    When User Logs In With Valid Credentials
     Then Welcome Page Should Be Open
 
 
@@ -18,7 +23,7 @@ Valid Login
 Browser Is Opened To Login Page
     Open Browser To Login Page
 
-User "${username}" logs in with password "${password}"
-    Input Username    ${username}
-    Input Password    ${password}
+When User Logs In With Valid Credentials
+    Input Username    ${USERNAME}
+    Input Password    ${PASSWORD}
     Submit Credentials
