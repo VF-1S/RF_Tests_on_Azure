@@ -7,9 +7,7 @@ trigger:
   - main
 
 pool:
-  name: Default
-  demands:
-    - agent.name -equals DESKTOP-DBNL3H0
+  vmImage: vs2017-win2016
 strategy:
   matrix:
     Python37:
