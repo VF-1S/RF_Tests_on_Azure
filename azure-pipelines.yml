@@ -21,31 +21,44 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
-- script: |
-    py -m venv env
-    call .\env\Scripts\activate.bat
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+jobs:
+  - job: SetUpEnv
+    displayName: Prepare Environment
+    steps:
+      - script: |
+          py -m venv env
+          call .\env\Scripts\activate.bat
+        displayName: 'Create Virtual Environment'
+      - script: |
+          pip install -r requirements.txt
+        displayName: 'Install dependencies'
+  - job: StartApp
+    displayName: Start Demo Application
+    dependsOn: SetUpEnv
+    steps:
+      - script: |
+          start cmd.exe /c python demoapp/server.py
+        displayName: 'Start application demo'
+  - job: StartTest
+    displayName: Scan the Code and Start Testing
+    dependsOn: StartApp
+    steps:
+      - script: |
+          robocop -A robocop.cfg
+        displayName: 'Check static code analysis of .robot files'
 
-- script: |
-    robocop -A robocop.cfg
-  displayName: 'Check static code analysis of .robot files'
-
-- script: |
-    start cmd.exe /c python demoapp/server.py
-  displayName: 'Start application demo'
-
-- script: |
-    Write-Host ("##vso[task.setvariable variable=doThing;isOutput=true]Yes")
-    robot -x outputxunit.xml login_tests
-  displayName: 'Start testing application demo'
-  name: RoboTests
-
-- task: PublishTestResults@2
-  condition: and(succeededOrFailed(), eq(variables['RoboTests.doThing'], 'Yes'))
-  displayName: 'Publish Test Results outputxunit.xml'
-  inputs:
-    testResultsFiles: outputxunit.xml
-    searchFolder: '$(Build.SourcesDirectory)'
-    mergeTestResults: false
-    failTaskOnFailedTests: true
+      - script: |
+          robot -x outputxunit.xml login_tests
+        displayName: 'Start testing application demo'
+  - job: PublishResults
+    displayName: Publish RF results
+    dependsOn: StartTest
+    steps:
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        displayName: 'Publish Test Results outputxunit.xml'
+        inputs:
+          testResultsFiles: outputxunit.xml
+          searchFolder: '$(Build.SourcesDirectory)'
+          mergeTestResults: false
+          failTaskOnFailedTests: true
