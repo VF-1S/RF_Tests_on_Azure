@@ -1,0 +1,70 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- main
+
+stages:
+  - stage: Environment
+    displayName: 'Set Up Environment'
+    jobs:
+      - job: setup_env
+        displayName: 'Build Deployment Package'
+        pool:
+          name: Default
+          demands:
+            - agent.name -equals DESKTOP-DBNL3H0
+        strategy:
+            matrix:
+              Python37:
+                python.version: '3.7'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(python.version)'
+            displayName: 'Use Python $(python.version)'
+          - script: |
+              py -m venv env
+              call .\env\Scripts\activate.bat
+            displayName: 'Create Virtual Environment'
+          - script: |
+              pip install -r requirements.txt
+            displayName: 'Install dependencies'
+          - script: |
+              start cmd.exe /c python demoapp/server.py
+            displayName: 'Start application demo'
+  - stage: Testing
+    displayName: 'Start Testing'
+    jobs:
+      - job: start_tests
+        displayName: 'Scan the Code and Start Testing'
+        pool:
+          name: Default
+          demands:
+            - agent.name -equals DESKTOP-DBNL3H0
+        steps:
+          - script: |
+              robocop -A robocop.cfg
+            displayName: 'Check static code analysis of .robot files'
+
+          - script: |
+              robot -x outputxunit.xml login_tests
+            displayName: 'Start testing application demo'
+      - job: publish_results
+        displayName: 'Publish AT Results'
+        dependsOn: start_tests
+        condition: succeededOrFailed()
+        pool:
+          name: Default
+          demands:
+            - agent.name -equals DESKTOP-DBNL3H0
+          steps:
+            - task: PublishTestResults@2
+              displayName: 'Publish Test Results outputxunit.xml'
+              inputs:
+                testResultsFiles: outputxunit.xml
+                searchFolder: '$(Build.SourcesDirectory)'
+                mergeTestResults: false
+                failTaskOnFailedTests: true
