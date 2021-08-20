@@ -6,7 +6,7 @@
 trigger:
 - main
 
-stagies:
+stages:
   - stage: Environment
     displayName: 'Set Up Environment'
     jobs:
