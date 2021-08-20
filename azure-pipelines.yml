@@ -36,11 +36,12 @@ steps:
   displayName: 'Start application demo'
 
 - script: |
+    echo "##vso[task.setvariable variable=doThing;isOutput=true]Yes" #set variable doThing to Yes
     robot -x outputxunit.xml login_tests
   displayName: 'Start testing application demo'
 
 - task: PublishTestResults@2
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['JestUnitTests.doThing'], 'Yes'))
   displayName: 'Publish Test Results outputxunit.xml'
   inputs:
     testResultsFiles: outputxunit.xml

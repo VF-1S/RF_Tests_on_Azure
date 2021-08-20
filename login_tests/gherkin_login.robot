@@ -8,7 +8,7 @@ Test Teardown     Close Browser
 
 
 *** Variables ***
-${USERNAME}     demo
+${USERNAME}     Demo
 ${PASSWORD}     mode
 
 
