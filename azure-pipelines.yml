@@ -27,7 +27,6 @@ stages:
             displayName: 'Use Python $(python.version)'
           - script: |
             py -m venv env
-            call .\env\Scripts\activate.bat
             displayName: 'Create Virtual Environment'
           - script: |
             call .\env\Scripts\activate.bat
