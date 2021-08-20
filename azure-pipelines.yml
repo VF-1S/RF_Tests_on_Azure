@@ -27,13 +27,14 @@ stages:
             displayName: 'Use Python $(python.version)'
           - script: |
               py -m venv env
-            displayName: 'Create Virtual Environment'
-          - script: |
               call .\env\Scripts\activate.bat
-            displayName: 'Activate Virtual Environment'
+            displayName: 'Create Virtual Environment'
           - script: |
               pip install -r requirements.txt
             displayName: 'Install dependencies'
+          - script: |
+              start cmd.exe /c python demoapp/server.py
+            displayName: 'Start application demo'
   - stage: Testing
     displayName: 'Start Testing'
     jobs:
@@ -51,20 +52,19 @@ stages:
           - script: |
               robot -x outputxunit.xml login_tests
             displayName: 'Start testing application demo'
-  - stage: Publishing
-    displayName: 'Publish AT Results'
-    jobs:
       - job: publish_results
+        displayName: 'Publish AT Results'
+        dependsOn: start_tests
         pool:
           name: Default
           demands:
             - agent.name -equals DESKTOP-DBNL3H0
-        steps:
-          - task: PublishTestResults@2
-            condition: succeededOrFailed()
-            displayName: 'Publish Test Results outputxunit.xml'
-            inputs:
-              testResultsFiles: outputxunit.xml
-              searchFolder: '$(Build.SourcesDirectory)'
-              mergeTestResults: false
-              failTaskOnFailedTests: true
+          steps:
+            - task: PublishTestResults@2
+              condition: succeededOrFailed()
+              displayName: 'Publish Test Results outputxunit.xml'
+              inputs:
+                testResultsFiles: outputxunit.xml
+                searchFolder: '$(Build.SourcesDirectory)'
+                mergeTestResults: false
+                failTaskOnFailedTests: true
