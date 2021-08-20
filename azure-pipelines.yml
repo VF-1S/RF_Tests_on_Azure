@@ -18,34 +18,34 @@ strategy:
 steps:
   - task: UsePythonVersion@0
     inputs:
-  versionSpec: '$(python.version)'
+      versionSpec: '$(python.version)'
     displayName: 'Use Python $(python.version)'
 
   - script: |
-  py -m venv env
-  call .\env\Scripts\activate.bat
-  pip install -r requirements.txt
-  displayName: 'Install dependencies'
+      py -m venv env
+      call .\env\Scripts\activate.bat
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
   - script: |
-  robocop -A robocop.cfg
-  displayName: 'Check static code analysis of .robot files'
+      robocop -A robocop.cfg
+    displayName: 'Check static code analysis of .robot files'
 
   - script: |
-  start cmd.exe /c python demoapp/server.py
-  displayName: 'Start application demo'
+      start cmd.exe /c python demoapp/server.py
+    displayName: 'Start application demo'
 
   - script: |
-  Write-Host ("##vso[task.setvariable variable=doThing;isOutput=true]Yes")
-  robot -x outputxunit.xml login_tests
-  displayName: 'Start testing application demo'
-  name: RoboTests
+      Write-Host ("##vso[task.setvariable variable=doThing;isOutput=true]Yes")
+      robot -x outputxunit.xml login_tests
+    displayName: 'Start testing application demo'
+    name: RoboTests
 
   - task: PublishTestResults@2
     condition: and(succeededOrFailed(), eq(variables['RoboTests.doThing'], 'Yes'))
     displayName: 'Publish Test Results outputxunit.xml'
     inputs:
-  testResultsFiles: outputxunit.xml
-  searchFolder: '$(Build.SourcesDirectory)'
-  mergeTestResults: false
-  failTaskOnFailedTests: true
+      testResultsFiles: outputxunit.xml
+      searchFolder: '$(Build.SourcesDirectory)'
+      mergeTestResults: false
+      failTaskOnFailedTests: true
