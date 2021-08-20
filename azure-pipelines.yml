@@ -39,3 +39,10 @@ steps:
 - script: |
     robot -x outputxunit.xml login_tests
   displayName: 'Start testing application demo'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: outputxunit.xml
+    searchFolder: '$(Build.SourcesDirectory)'
+    condition: succeededOrFailed()
+    displayName: 'Publish Test Results outputxunit.xml'
