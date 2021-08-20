@@ -26,13 +26,13 @@ stages:
               versionSpec: '$(python.version)'
             displayName: 'Use Python $(python.version)'
           - script: |
-            py -m venv env
+              py -m venv env
             displayName: 'Create Virtual Environment'
           - script: |
-            call .\env\Scripts\activate.bat
+              call .\env\Scripts\activate.bat
             displayName: 'Activate Virtual Environment'
           - script: |
-            pip install -r requirements.txt
+              pip install -r requirements.txt
             displayName: 'Install dependencies'
   - stage: Testing
     displayName: 'Start Testing'
