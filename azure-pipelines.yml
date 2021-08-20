@@ -32,9 +32,6 @@ stages:
           - script: |
               pip install -r requirements.txt
             displayName: 'Install dependencies'
-          - script: |
-              start cmd.exe /c python demoapp/server.py
-            displayName: 'Start application demo'
   - stage: Testing
     displayName: 'Start Testing'
     jobs:
@@ -50,21 +47,16 @@ stages:
             displayName: 'Check static code analysis of .robot files'
 
           - script: |
+              start cmd.exe /c python demoapp/server.py
+            displayName: 'Start application demo'
+
+          - script: |
               robot -x outputxunit.xml login_tests
             displayName: 'Start testing application demo'
-      - job: publish_results
-        displayName: 'Publish AT Results'
-        dependsOn: start_tests
-        condition: succeededOrFailed()
-        pool:
-          name: Default
-          demands:
-            - agent.name -equals DESKTOP-DBNL3H0
-          steps:
-            - task: PublishTestResults@2
-              displayName: 'Publish Test Results outputxunit.xml'
-              inputs:
-                testResultsFiles: outputxunit.xml
-                searchFolder: '$(Build.SourcesDirectory)'
-                mergeTestResults: false
-                failTaskOnFailedTests: true
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results outputxunit.xml'
+            inputs:
+              testResultsFiles: outputxunit.xml
+              searchFolder: '$(Build.SourcesDirectory)'
+              mergeTestResults: false
+              failTaskOnFailedTests: true
